@@ -26,6 +26,7 @@ export interface UserStats {
   avgScore: number;
   totalUsers: number;
   resumesProcessed: number;
+  totalJobDescriptions: number;
 }
 
 export const sampleMatchResults: MatchResult[] = [
@@ -135,6 +136,7 @@ export const adminStats: UserStats = {
   avgScore: 76.3,
   totalUsers: 384,
   resumesProcessed: 2103,
+  totalJobDescriptions: 156,
 };
 
 export const usageData = [
@@ -152,4 +154,13 @@ export const adminUsers = [
   { id: "3", name: "HR Manager", email: "hr@techcorp.com", role: "Recruiter", status: "Active", lastLogin: "2026-02-06" },
   { id: "4", name: "Ananya Gupta", email: "ananya@email.com", role: "Candidate", status: "Inactive", lastLogin: "2026-01-20" },
   { id: "5", name: "Recruiter Team", email: "recruit@startup.com", role: "Recruiter", status: "Active", lastLogin: "2026-02-04" },
+];
+
+export const recentActivity = [
+  { id: "1", action: "Resume Matched", user: "Priya Sharma", detail: "Senior Frontend Developer @ TechCorp", score: 92, time: "2 min ago" },
+  { id: "2", action: "New Registration", user: "Amit Kumar", detail: "Joined as Candidate", score: null, time: "15 min ago" },
+  { id: "3", action: "JD Uploaded", user: "HR Manager", detail: "Full Stack Engineer position", score: null, time: "1 hr ago" },
+  { id: "4", action: "Resume Matched", user: "Rahul Mehta", detail: "Backend Developer @ StartupXYZ", score: 87, time: "2 hrs ago" },
+  { id: "5", action: "Resume Matched", user: "Neha Patel", detail: "UI/UX Developer @ DesignHub", score: 65, time: "3 hrs ago" },
+  { id: "6", action: "New Registration", user: "Recruiter Team", detail: "Joined as Recruiter", score: null, time: "5 hrs ago" },
 ];

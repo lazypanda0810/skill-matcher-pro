@@ -44,37 +44,51 @@ const simulateDelay = (ms = 800) =>
 
 // ===================== AUTH =====================
 
+// Demo credentials for role-based login
+const DEMO_ACCOUNTS: Record<string, { password: string; role: "candidate" | "recruiter" | "admin"; name: string }> = {
+  "candidate@demo.com": { password: "Candidate@123", role: "candidate", name: "Demo Candidate" },
+  "recruiter@demo.com": { password: "Recruiter@123", role: "recruiter", name: "Demo Recruiter" },
+  "admin@demo.com": { password: "Admin@123", role: "admin", name: "Admin" },
+};
+
 export const authService = {
   async login(email: string, password: string) {
     await simulateDelay(1000);
-    // Mock login — returns a dummy token and user info
-    return {
-      token: "mock_jwt_token_" + Date.now(),
-      user: {
-        id: "user_1",
-        email,
-        name: email.split("@")[0],
-        role: "candidate" as const,
-      },
-    };
+    const demo = DEMO_ACCOUNTS[email.toLowerCase()];
+    if (demo && demo.password === password) {
+      return {
+        token: "mock_jwt_token_" + Date.now(),
+        user: { id: "user_" + demo.role, email, name: demo.name, role: demo.role },
+      };
+    }
+    // For non-demo accounts, reject
+    throw new Error("Invalid credentials. Please use a demo account.");
   },
 
   async register(email: string, password: string, role: "candidate" | "recruiter") {
     await simulateDelay(1000);
     return {
       token: "mock_jwt_token_" + Date.now(),
-      user: {
-        id: "user_" + Date.now(),
-        email,
-        name: email.split("@")[0],
-        role,
-      },
+      user: { id: "user_" + Date.now(), email, name: email.split("@")[0], role },
     };
   },
 
   logout() {
     localStorage.removeItem("auth_token");
     localStorage.removeItem("user");
+  },
+
+  getUser() {
+    try {
+      const user = localStorage.getItem("user");
+      return user ? JSON.parse(user) : null;
+    } catch {
+      return null;
+    }
+  },
+
+  isAuthenticated() {
+    return !!localStorage.getItem("auth_token");
   },
 };
 
