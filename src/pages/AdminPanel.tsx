@@ -6,6 +6,8 @@ import {
   TrendingUp,
   Activity,
   Shield,
+  Briefcase,
+  Clock,
 } from "lucide-react";
 import {
   BarChart,
@@ -25,6 +27,7 @@ import {
   adminStats,
   usageData,
   adminUsers,
+  recentActivity,
 } from "@/utils/mockData";
 
 const AdminPanel = () => {
@@ -66,7 +69,7 @@ const AdminPanel = () => {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
           <StatCard
             icon={Users}
             label="Total Users"
@@ -76,21 +79,27 @@ const AdminPanel = () => {
           />
           <StatCard
             icon={FileText}
-            label="Resumes Processed"
+            label="Resumes Uploaded"
             value={adminStats.resumesProcessed.toLocaleString()}
             index={1}
+          />
+          <StatCard
+            icon={Briefcase}
+            label="Job Descriptions"
+            value={adminStats.totalJobDescriptions}
+            index={2}
           />
           <StatCard
             icon={BarChart3}
             label="Total Matches"
             value={adminStats.totalMatches.toLocaleString()}
-            index={2}
+            index={3}
           />
           <StatCard
             icon={TrendingUp}
             label="Avg Match Score"
             value={`${adminStats.avgScore}%`}
-            index={3}
+            index={4}
           />
         </div>
 
@@ -202,85 +211,81 @@ const AdminPanel = () => {
           </div>
         </div>
 
-        {/* User Management */}
-        <div className="bg-card border border-border rounded-xl shadow-card overflow-hidden animate-fade-in-up delay-200">
-          <div className="p-6 border-b border-border">
-            <h3 className="text-base font-heading font-semibold text-foreground">
-              User Management
-            </h3>
-            <p className="text-sm text-muted-foreground mt-1">
-              Overview of all registered users
-            </p>
+        {/* Recent Activity & User Management */}
+        <div className="grid lg:grid-cols-3 gap-6 mb-8">
+          {/* Recent Activity */}
+          <div className="bg-card border border-border rounded-xl shadow-card overflow-hidden animate-fade-in-up delay-200">
+            <div className="p-6 border-b border-border">
+              <h3 className="text-base font-heading font-semibold text-foreground flex items-center gap-2">
+                <Clock className="w-4 h-4 text-accent" />
+                Recent Activity
+              </h3>
+            </div>
+            <div className="divide-y divide-border">
+              {recentActivity.map((item) => (
+                <div key={item.id} className="px-6 py-3.5 hover:bg-secondary/30 transition-colors">
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <p className="text-sm font-medium text-foreground">{item.action}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">{item.user} — {item.detail}</p>
+                    </div>
+                    <div className="text-right flex-shrink-0">
+                      {item.score !== null && (
+                        <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-semibold ${item.score >= 80 ? "bg-success/10 text-success" : item.score >= 60 ? "bg-warning/10 text-warning" : "bg-destructive/10 text-destructive"}`}>
+                          {item.score}%
+                        </span>
+                      )}
+                      <p className="text-xs text-muted-foreground mt-0.5">{item.time}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-border bg-secondary/50">
-                  <th className="text-left px-6 py-3 text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wider">
-                    Name
-                  </th>
-                  <th className="text-left px-6 py-3 text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wider">
-                    Email
-                  </th>
-                  <th className="text-left px-6 py-3 text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wider">
-                    Role
-                  </th>
-                  <th className="text-left px-6 py-3 text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="text-left px-6 py-3 text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wider">
-                    Last Login
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {adminUsers.map((user) => (
-                  <tr
-                    key={user.id}
-                    className="hover:bg-secondary/30 transition-colors"
-                  >
-                    <td className="px-6 py-4 text-sm font-medium text-foreground">
-                      {user.name}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-muted-foreground">
-                      {user.email}
-                    </td>
-                    <td className="px-6 py-4">
-                      <span
-                        className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          user.role === "Recruiter"
-                            ? "bg-info/10 text-info"
-                            : "bg-accent/10 text-accent"
-                        }`}
-                      >
-                        {user.role}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span
-                        className={`inline-flex items-center gap-1 text-xs font-medium ${
-                          user.status === "Active"
-                            ? "text-success"
-                            : "text-muted-foreground"
-                        }`}
-                      >
-                        <span
-                          className={`w-1.5 h-1.5 rounded-full ${
-                            user.status === "Active"
-                              ? "bg-success"
-                              : "bg-muted-foreground"
-                          }`}
-                        />
-                        {user.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-muted-foreground">
-                      {user.lastLogin}
-                    </td>
+
+          {/* User Management */}
+          <div className="lg:col-span-2 bg-card border border-border rounded-xl shadow-card overflow-hidden animate-fade-in-up delay-200">
+            <div className="p-6 border-b border-border">
+              <h3 className="text-base font-heading font-semibold text-foreground">
+                User Management
+              </h3>
+              <p className="text-sm text-muted-foreground mt-1">
+                Overview of all registered users
+              </p>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-border bg-secondary/50">
+                    <th className="text-left px-6 py-3 text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wider">Name</th>
+                    <th className="text-left px-6 py-3 text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wider">Email</th>
+                    <th className="text-left px-6 py-3 text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wider">Role</th>
+                    <th className="text-left px-6 py-3 text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wider">Status</th>
+                    <th className="text-left px-6 py-3 text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wider">Last Login</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {adminUsers.map((user) => (
+                    <tr key={user.id} className="hover:bg-secondary/30 transition-colors">
+                      <td className="px-6 py-4 text-sm font-medium text-foreground">{user.name}</td>
+                      <td className="px-6 py-4 text-sm text-muted-foreground">{user.email}</td>
+                      <td className="px-6 py-4">
+                        <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${user.role === "Recruiter" ? "bg-info/10 text-info" : "bg-accent/10 text-accent"}`}>
+                          {user.role}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className={`inline-flex items-center gap-1 text-xs font-medium ${user.status === "Active" ? "text-success" : "text-muted-foreground"}`}>
+                          <span className={`w-1.5 h-1.5 rounded-full ${user.status === "Active" ? "bg-success" : "bg-muted-foreground"}`} />
+                          {user.status}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-muted-foreground">{user.lastLogin}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
