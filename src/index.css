@@ -276,3 +276,40 @@
 .animate-shimmer-border {
   animation: shimmer-border 3s ease-in-out infinite;
 }
+
+/* Scanner line */
+@keyframes scanner {
+  0% { top: -2px; }
+  100% { top: 100%; }
+}
+
+@keyframes scanner-horizontal {
+  0% { left: -80px; }
+  100% { left: calc(100% + 80px); }
+}
+
+@keyframes orb-3 {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+  50% { transform: translate(-40px, -30px) scale(1.2); opacity: 0.8; }
+}
+
+.animate-scanner {
+  animation: scanner 3s linear infinite;
+}
+
+.animate-scanner-horizontal {
+  animation: scanner-horizontal 3s linear infinite;
+}
+
+.animate-orb-3 {
+  animation: orb-3 12s ease-in-out infinite;
+}
+
+.writing-vertical {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
